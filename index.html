@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Microstock Assistant - Ubah Jam Kerja Menjadi Menit</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles & Animations -->
+    <style>
+        /* Base Styles from Landing Page */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark theme background */
+            color: #d1d5db; /* Default text color */
+        }
+
+        /* Gradient Text Effect */
+        .gradient-text {
+            background: linear-gradient(90deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        
+        /* Glow Effect for "Cara Baru" Column */
+        .glow-card {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glow-card::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px;
+            right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #4f46e5, #a855f7, #ec4899);
+            border-radius: 1rem; /* Match card's border-radius */
+            z-index: -1;
+            filter: blur(15px);
+            opacity: 0.5;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .glow-card:hover::before {
+            opacity: 0.8;
+        }
+
+        /* Animation Classes for JavaScript */
+        .initial-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-up {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Styles from App Preview */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .result-image-container .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
+        }
+        .result-image-container:hover .overlay {
+            opacity: 1;
+        }
+        .glass-card {
+            background: rgba(31, 41, 55, 0.5); /* Adjusted for dark theme */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .locked-preview::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: white;
+            text-shadow: 0 0 10px black;
+            z-index: 10;
+        }
+        .locked-preview img {
+            filter: blur(4px) grayscale(50%);
+        }
+        .locked-preview {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="absolute top-0 left-0 right-0 z-10 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-white">AMA.</h1>
+            <a href="#pricing" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-5 rounded-lg transition-colors duration-300">
+                Dapatkan Akses
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Bagian 1: Hero Section -->
+        <section id="hero" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden px-4">
+            <div class="absolute inset-0 bg-grid-gray-700/[0.2] [mask-image:linear-gradient(to_bottom,white_20%,transparent_100%)]"></div>
+            <div class="relative z-10 max-w-4xl mx-auto">
+                <div class="initial-hidden">
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white leading-tight mb-4">
+                        Ubah Jam Kerja <br> Menjadi <span class="gradient-text">Menit.</span>
+                    </h1>
+                </div>
+                <div class="initial-hidden" style="transition-delay: 150ms;">
+                    <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+                        Dari generasi aset hingga 50 kata kunci dalam satu klik. AI Microstock Assistant adalah partner cerdas yang menangani tugas-tugas melelahkan untuk Anda.
+                    </p>
+                </div>
+                <div class="initial-hidden" style="transition-delay: 300ms;">
+                    <a href="https://lynk.id/vidcraftdigital/ez5pv7pknp2v" target="_blank" rel="noopener noreferrer" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 text-lg rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                        Dapatkan Akses
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 2: Visual "Sebelum & Sesudah" -->
+        <section id="transformation" class="py-20 sm:py-32 px-4">
+            <div class="container mx-auto max-w-6xl">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+                    <!-- Kolom Kiri: Cara Lama -->
+                    <div class="initial-hidden bg-gray-800/50 p-8 rounded-2xl border border-gray-700">
+                        <h3 class="text-3xl font-bold text-center mb-6"><span class="text-red-500">❌</span> Cara Lama</h3>
+                        <ul class="space-y-6 text-gray-300">
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-red-400 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <div>
+                                    <h4 class="font-semibold text-white">Ide & Desain Manual</h4>
+                                    <p>Proses brainstorming dan eksekusi desain memakan waktu berjam-jam, memperlambat produktivitas Anda secara signifikan.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-red-400 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.636-6.364l.707.707M19.071 4.929l-.707.707M12 21v-1"></path></svg>
+                                <div>
+                                    <h4 class="font-semibold text-white">Riset Keyword Manual</h4>
+                                    <p>Mencari kata kunci yang relevan dan efektif adalah proses coba-coba yang melelahkan dan seringkali tidak akurat.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-red-400 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                <div>
+                                    <h4 class="font-semibold text-white">Ditolak Karena Metadata</h4>
+                                    <p>Risiko penolakan tinggi akibat metadata yang tidak lengkap atau tidak relevan, membuang waktu dan tenaga Anda.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Kolom Kanan: Cara Baru -->
+                    <div class="initial-hidden glow-card bg-gray-900 p-8 rounded-2xl border border-indigo-500/50">
+                        <h3 class="text-3xl font-bold text-center mb-6"><span class="text-green-500">✅</span> Cara Baru</h3>
+                        <ul class="space-y-6 text-gray-300">
+                             <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-400 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                <div>
+                                    <h4 class="font-semibold text-white">Generasi Aset dari Teks</h4>
+                                    <p>Ubah ide Anda menjadi aset visual berkualitas tinggi hanya dengan beberapa kata. AI menangani proses kreatif yang kompleks.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-400 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8v5z"></path></svg>
+                                <div>
+                                    <h4 class="font-semibold text-white">Metadata dalam 1 Klik</h4>
+                                    <p>Dapatkan judul, deskripsi, dan hingga 50 kata kunci relevan yang dioptimalkan untuk visibilitas maksimal secara otomatis.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-6 h-6 text-green-400 mr-3 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <div>
+                                    <h4 class="font-semibold text-white">Lolos Review Lebih Cepat</h4>
+                                    <p>Tingkatkan peluang aset Anda lolos review dengan metadata berkualitas tinggi, mempercepat waktu Anda untuk mulai menghasilkan.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 3: Prototipe Interaktif (TERINTEGRASI) -->
+        <section id="prototype" class="py-20 sm:py-32 px-4 bg-gray-900/70">
+            <div class="container mx-auto max-w-6xl text-center">
+                <h2 class="initial-hidden text-4xl md:text-5xl font-bold text-white mb-12">Rasakan Langsung Cara Kerjanya</h2>
+                
+                <!-- START: KONTEN PRATINJAU INTERAKTIF -->
+                <div class="initial-hidden bg-gradient-to-br from-gray-800 via-purple-900/30 to-blue-900/30 p-4 md:p-8 rounded-2xl shadow-2xl border border-gray-700">
+                    <div id="app">
+                         <!-- Header Pratinjau -->
+                        <header class="text-center mb-8 md:mb-12">
+                            <h1 class="text-3xl md:text-4xl font-bold text-white">Tentatif Studio</h1>
+                            <p class="text-lg text-gray-300 mt-1">AI Microstock Assistant</p>
+                            <nav class="mt-6 flex justify-center items-center gap-4">
+                                <button onclick="showView('home-view')" class="px-4 py-2 rounded-md glass-card hover:bg-white/20 transition">Beranda</button>
+                                <button onclick="showTrendsPreview()" class="px-4 py-2 rounded-md glass-card hover:bg-white/20 transition">Analisis Tren</button>
+                            </nav>
+                        </header>
+
+                        <!-- Main Content Pratinjau -->
+                        <main id="main-content">
+                            <!-- Home View: Core Workflow Selection -->
+                            <div id="home-view" class="fade-in">
+                                <h2 class="text-2xl font-semibold text-center mb-8 text-white">Mulai Dari Mana?</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <!-- Card 1: Create New Asset -->
+                                    <div class="glass-card p-6 rounded-lg text-center cursor-pointer hover:bg-white/20 transition transform hover:-translate-y-1" onclick="showView('text-to-image-view')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-blue-400"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/><path d="m15 5 3 3"/></svg>
+                                        <h3 class="text-xl font-bold mb-2">Buat Aset Baru</h3>
+                                        <p class="text-gray-300">Hasilkan visual unik dari deskripsi teks.</p>
+                                    </div>
+                                    <!-- Card 2: Upload & Convert -->
+                                    <div class="glass-card p-6 rounded-lg text-center cursor-pointer hover:bg-white/20 transition transform hover:-translate-y-1" onclick="showView('image-to-image-view')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-green-400"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                                        <h3 class="text-xl font-bold mb-2">Unggah & Konversi</h3>
+                                        <p class="text-gray-300">Ubah gaya gambar Anda yang sudah ada.</p>
+                                    </div>
+                                    <!-- Card 3: Metadata Only -->
+                                    <div class="glass-card p-6 rounded-lg text-center cursor-pointer hover:bg-white/20 transition transform hover:-translate-y-1" onclick="showMetadataPreview(metadataOnlyData)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-purple-400"><path d="M12.5 22h-6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7.5"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M4 10h16"/><path d="m17.5 18-1.5-1.5 1.5-1.5"/><path d="m20.5 15-1.5 1.5 1.5 1.5"/></svg>
+                                        <h3 class="text-xl font-bold mb-2">Buat Metadata Saja</h3>
+                                        <p class="text-gray-300">Analisis gambar dan hasilkan metadata.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- All other views -->
+                            <div id="text-to-image-view" class="hidden fade-in max-w-2xl mx-auto glass-card p-6 rounded-lg">
+                                <h2 class="text-2xl font-semibold text-center mb-6">Buat Aset Baru (Pratinjau)</h2>
+                                <div id="t2i-style-step-preview">
+                                    <label class="block mb-4 font-medium text-center text-lg">Langkah 1: Pilih Gaya</label>
+                                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                                        <button onclick="showToast('Hanya mode Vector yang tersedia di pratinjau ini.')" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition opacity-50 cursor-not-allowed">Fotografi Realistis 🔒</button>
+                                        <button onclick="showT2IPromptStep()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition text-lg">Ilustrasi Vektor</button>
+                                        <button onclick="showToast('Hanya mode Vector yang tersedia di pratinjau ini.')" class="bg-purple-600 text-white font-bold py-3 px-6 rounded-lg transition opacity-50 cursor-not-allowed">Ikon 3D 🔒</button>
+                                    </div>
+                                </div>
+                                <div id="t2i-prompt-step-preview" class="hidden">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <div>
+                                            <label class="block font-medium text-lg">Langkah 2: Buat Prompt</label>
+                                            <p class="text-sm text-gray-300">Gaya yang dipilih: <span class="font-semibold text-green-300">Ilustrasi Vektor</span></p>
+                                        </div>
+                                        <button onclick="resetT2IPreview()" class="text-sm text-gray-400 hover:text-white underline">Ubah Gaya</button>
+                                    </div>
+                                    <textarea class="w-full bg-black/20 text-white p-3 rounded-md mb-4" rows="3" readonly>Modern isometric illustration of a productive home office workspace</textarea>
+                                    <button onclick="showT2IPreview()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-lg transition">Hasilkan Gambar</button>
+                                </div>
+                            </div>
+                            <div id="image-to-image-view" class="hidden fade-in max-w-2xl mx-auto glass-card p-6 rounded-lg">
+                                <h2 class="text-2xl font-semibold text-center mb-6">Unggah & Konversi (Pratinjau)</h2>
+                                <p class="text-center mb-4">Ini adalah contoh gambar yang akan diunggah.</p>
+                                <img src="https://raw.githubusercontent.com/wahyutifty/aset-ai-microstok/main/7da2125dff4b7e41ff0678648ab5e3d9.jpg" alt="Contoh gambar asli" class="max-h-64 mx-auto rounded-md mb-4">
+                                <label class="block mb-2 font-medium">Pilih Gaya Target:</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="showI2IPreview()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition">Ilustrasi Vektor</button>
+                                    <button class="bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition opacity-50 cursor-not-allowed">Ikon 3D (Terkunci)</button>
+                                </div>
+                            </div>
+                            <div id="results-view" class="hidden fade-in">
+                                <h2 id="results-title" class="text-2xl font-semibold text-center mb-6">Hasil Pratinjau</h2>
+                                <p id="prompt-display" class="text-center text-gray-400 mb-6 italic"></p>
+                                <div id="results-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                            </div>
+                            <div id="metadata-view" class="hidden fade-in">
+                                <h2 class="text-2xl font-semibold text-center mb-6">Contoh Metadata</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div class="md:col-span-1">
+                                        <img id="metadata-image" src="#" alt="Aset yang dipilih" class="w-full rounded-lg shadow-lg">
+                                        <button onclick="showToast('Fitur unduh tidak tersedia dalam pratinjau.')" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                            Unduh Paket (.zip)
+                                        </button>
+                                    </div>
+                                    <div id="metadata-content" class="md:col-span-2 glass-card p-6 rounded-lg"></div>
+                                </div>
+                            </div>
+                            <div id="trends-view" class="hidden fade-in max-w-4xl mx-auto glass-card p-6 rounded-lg">
+                                <h2 class="text-2xl font-semibold text-center mb-6">Contoh Analisis Tren</h2>
+                                <div id="trends-content" class="bg-black/20 p-6 rounded-lg min-h-[200px]"></div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+                <!-- END: KONTEN PRATINJAU INTERAKTIF -->
+
+            </div>
+        </section>
+
+        <!-- Bagian Lanjutan setelah Prototipe -->
+        <section id="prototype-cta" class="py-20 bg-gray-800/50">
+            <div class="container mx-auto max-w-4xl text-center px-4">
+                <h2 class="initial-hidden text-3xl md:text-4xl font-bold text-white mb-4">Suka dengan Apa yang Anda Lihat?</h2>
+                <p class="initial-hidden text-lg text-gray-300 mb-8">Buka potensi penuh AI Microstock Assistant dengan akses lifetime. Dapatkan semua fitur tanpa batasan dan mulailah berkreasi lebih cepat hari ini.</p>
+                <div class="initial-hidden">
+                    <a href="https://lynk.id/vidcraftdigital/ez5pv7pknp2v" target="_blank" rel="noopener noreferrer" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 text-lg rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                        Dapatkan Akses Lifetime Sekarang
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 4: Showcase Fitur Utama -->
+        <section id="features" class="py-20 sm:py-32 px-4">
+            <div class="container mx-auto max-w-6xl">
+                <div class="text-center mb-16">
+                    <h2 class="initial-hidden text-4xl md:text-5xl font-bold text-white">Dibangun untuk Efisiensi Maksimal</h2>
+                    <p class="initial-hidden text-lg text-gray-400 mt-4 max-w-2xl mx-auto">Semua alat yang Anda butuhkan dalam satu platform cerdas.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Feature Card 1 -->
+                    <div class="initial-hidden feature-card bg-gray-800/50 p-6 rounded-xl border-2 border-transparent hover:border-indigo-500 transition-all duration-300">
+                        <div class="mb-4 bg-indigo-600/20 w-16 h-16 rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-indigo-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.636-6.364l.707.707M19.071 4.929l-.707.707M12 21v-1"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">AI Asset Generator</h3>
+                        <p class="text-gray-400">Buat gambar dan ilustrasi unik dari deskripsi teks sederhana.</p>
+                    </div>
+                    <!-- Feature Card 2 -->
+                    <div class="initial-hidden feature-card bg-gray-800/50 p-6 rounded-xl border-2 border-transparent hover:border-indigo-500 transition-all duration-300" style="transition-delay: 100ms;">
+                        <div class="mb-4 bg-indigo-600/20 w-16 h-16 rounded-lg flex items-center justify-center">
+                             <svg class="w-8 h-8 text-indigo-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8v5z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">AI Metadata Suite</h3>
+                        <p class="text-gray-400">Dapatkan judul, deskripsi, dan kata kunci yang dioptimalkan dalam sekejap.</p>
+                    </div>
+                    <!-- Feature Card 3 -->
+                    <div class="initial-hidden feature-card bg-gray-800/50 p-6 rounded-xl border-2 border-transparent hover:border-indigo-500 transition-all duration-300" style="transition-delay: 200ms;">
+                        <div class="mb-4 bg-indigo-600/20 w-16 h-16 rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-indigo-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">AI Trend Analyzer</h3>
+                        <p class="text-gray-400">Temukan topik dan gaya visual yang sedang tren di pasar microstock.</p>
+                    </div>
+                    <!-- Feature Card 4 -->
+                    <div class="initial-hidden feature-card bg-gray-800/50 p-6 rounded-xl border-2 border-transparent hover:border-indigo-500 transition-all duration-300" style="transition-delay: 300ms;">
+                        <div class="mb-4 bg-indigo-600/20 w-16 h-16 rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-indigo-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Batch Processing</h3>
+                        <p class="text-gray-400">Proses metadata untuk ratusan aset sekaligus, bukan satu per satu.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 5: Paket Harga -->
+        <section id="pricing" class="py-20 sm:py-32 px-4 bg-gray-900/70">
+            <div class="container mx-auto max-w-2xl text-center">
+                <div class="initial-hidden bg-gray-800 p-8 md:p-12 rounded-2xl shadow-xl border border-indigo-500/30">
+                    <h2 class="text-4xl font-bold text-white mb-2">Penawaran Spesial</h2>
+                    <p class="text-indigo-400 font-semibold mb-6">Akses Seumur Hidup</p>
+                    <p class="text-6xl font-extrabold text-white mb-4">
+                        Rp 99.000
+                    </p>
+                    <p class="text-gray-400 mb-8">Sekali bayar untuk akses selamanya. Tanpa biaya langganan, tanpa batasan.</p>
+                    <ul class="space-y-3 text-left max-w-md mx-auto mb-10">
+                        <li class="flex items-center"><svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Generasi Aset Tanpa Batas</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Analisis Metadata Tanpa Batas</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Akses Seumur Hidup (Lifetime)</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Pembaruan Fitur Gratis</li>
+                    </ul>
+                    <a href="https://lynk.id/vidcraftdigital/ez5pv7pknp2v" target="_blank" rel="noopener noreferrer" class="w-full inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 text-lg rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                        Dapatkan Akses Lifetime Sekarang
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 6: Testimonial -->
+        <section id="testimonials" class="py-20 sm:py-32 px-4">
+            <div class="container mx-auto max-w-5xl">
+                <h2 class="initial-hidden text-center text-4xl font-bold text-white mb-12">Dipercaya oleh Para Profesional</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="initial-hidden bg-gray-800/50 p-8 rounded-xl border border-gray-700">
+                        <p class="text-gray-300 mb-6">"Alat ini benar-benar mengubah alur kerja saya. Proses keyword yang biasanya memakan waktu berjam-jam, kini selesai dalam hitungan detik. Wajib punya untuk semua kontributor microstock."</p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/48x48/6366f1/ffffff?text=AD" alt="Andi Dermawan" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <p class="font-semibold text-white">Andi Dermawan</p>
+                                <p class="text-sm text-gray-400">Kontributor Shutterstock & Adobe Stock</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="initial-hidden bg-gray-800/50 p-8 rounded-xl border border-gray-700" style="transition-delay: 150ms;">
+                        <p class="text-gray-300 mb-6">"Awalnya saya skeptis, tapi AI-nya luar biasa akurat. Tidak hanya mempercepat pekerjaan, tapi kualitas metadata yang dihasilkan juga meningkatkan penjualan saya. Sangat direkomendasikan!"</p>
+                        <div class="flex items-center">
+                             <img src="https://placehold.co/48x48/ec4899/ffffff?text=SR" alt="Siti Rahayu" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <p class="font-semibold text-white">Siti Rahayu</p>
+                                <p class="text-sm text-gray-400">Ilustrator & Kontributor Freepik</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 7: CTA Terakhir -->
+        <section id="final-cta" class="py-20 sm:py-24 px-4 bg-indigo-700">
+             <div class="container mx-auto max-w-4xl text-center">
+                <h2 class="initial-hidden text-4xl md:text-5xl font-bold text-white mb-6">Siap Meningkatkan Pendapatan Microstock Anda?</h2>
+                <p class="initial-hidden text-lg text-indigo-200 mb-8">Berhenti membuang waktu untuk tugas manual. Fokus pada kreativitas Anda dan biarkan AI yang bekerja.</p>
+                <div class="initial-hidden">
+                    <a href="https://lynk.id/vidcraftdigital/ez5pv7pknp2v" target="_blank" rel="noopener noreferrer" class="inline-block bg-white hover:bg-gray-200 text-indigo-700 font-bold py-4 px-10 text-lg rounded-lg shadow-lg transition-transform transform hover:scale-105 duration-300">
+                        Dapatkan Akses Lifetime Rp 99.000
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Toast Notification (dari pratinjau) -->
+    <div id="toast" class="hidden fixed bottom-5 right-5 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg fade-in z-50">
+        <p id="toast-message"></p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-center p-6">
+        <p class="text-gray-500">&copy; 2025 AI Microstock Assistant. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript (GABUNGAN) -->
+    <script>
+        // --- DATA PRATINJAU ---
+        const t2iData = {
+            imageUrl: "https://raw.githubusercontent.com/wahyutifty/aset-ai-microstok/main/vector%20hasil.png",
+            titles: "Isometric Home Office Workspace\nModern Remote Work Desk Setup\nMinimalist Laptop Study Area",
+            description: "Modern isometric illustration of a productive home office workspace with laptop, coffee, plant, and books. Ideal for remote work, study, or freelance concepts with a minimalist design.",
+            keywords: "Home office, workspace, isometric, laptop, desk, remote work, work from home, productivity, illustration, vector, minimalist, modern, online education, study, freelance, office setup, technology, computer, chair, books, potted plant, coffee mug, clock, digital nomad, creative space, simple design, flat, outline art, workstation, home interior, office furniture, contemporary, cozy, productive environment, workspace design, work desk, learning, homework, success, goals, organization, efficiency, professional, business, communication, global, connectivity, device, equipment, home decor",
+            categories: "Technology\nInteriors & Home"
+        };
+
+        const i2iData = {
+            imageUrl: "https://raw.githubusercontent.com/wahyutifty/aset-ai-microstok/main/image%20to%20vector.png",
+            titles: "Stylish Black Woman Vector Portrait\nModern African American Female Illustration\nDiverse Young Woman with Curly Hair",
+            description: "Vector illustration of a confident young Black woman with curly hair and hoop earrings, wearing a green top and red pants against a vibrant green background. Modern, diverse, and stylish representation.",
+            keywords: "Black woman, vector illustration, curly hair, African American, portrait, stylish, confident, modern, diversity, young woman, flat design, digital art, fashion, beauty, hoop earrings, green background, red pants, green shirt, minimalist, graphic, female, people, studio shot, waist up, person, elegant, representation, empowerment, inclusion, character, feminism, individuality, vivid colors, contemporary, woman, girl, adult, dark skin, natural hair, vibrant, expression, looking at camera, brown eyes, red lips.",
+            categories: "People\nIllustrations & Vectors"
+        };
+
+        const metadataOnlyData = {
+            imageUrl: "https://raw.githubusercontent.com/wahyutifty/aset-ai-microstok/main/ubah%20ke%20metadata.png",
+            titles: "Smiling 3D Cartoon Boy with Skateboard\nHappy Youthful 3D Character Holding Skateboard\nCute Animated Boy Skater on Purple Background",
+            description: "A cheerful 3D cartoon boy with a green cap and shirt, smiling brightly while holding a skateboard. Perfect for youth, playful, and animated themes on a vibrant purple background.",
+            keywords: "boy, kid, child, cartoon, 3D character, animation, skateboard, skater, happy, smiling, cute, playful, youth, casual, green cap, green shirt, purple background, rendering, illustration, full body, studio shot, childhood, young, urban, lifestyle, cheerful, character design, freckles, baseball cap, shorts, sneakers, fun, hobby, sport, extreme sports, graphic, digital art, isolated, person, male, preteen, energetic, standing, bright, minimalist, modern, expression",
+            categories: "People / Children\n3D / Illustrations"
+        };
+
+        // --- SKRIP DARI LANDING PAGE ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Intersection Observer for fade-in animations
+            const animatedElements = document.querySelectorAll('.initial-hidden');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-up');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1 
+            });
+
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Special handling for feature cards hover effect icon scale
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                const icon = card.querySelector('svg');
+                card.addEventListener('mouseenter', () => {
+                    icon.style.transform = 'scale(1.1)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    icon.style.transform = 'scale(1)';
+                });
+            });
+
+            // Initialize the preview view
+            showView('home-view');
+        });
+
+
+        // --- SKRIP DARI PRATINJAU ---
+        // --- Global State ---
+        let currentView = 'home';
+
+        // --- Toast Notification ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.innerText = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // --- View Management ---
+        function showView(viewId) {
+            if (viewId === 'text-to-image-view') {
+                resetT2IPreview();
+            }
+            document.querySelectorAll('#main-content > div').forEach(view => {
+                view.classList.add('hidden');
+            });
+            const viewElement = document.getElementById(viewId);
+            if (viewElement) {
+                viewElement.classList.remove('hidden');
+            }
+            currentView = viewId;
+        }
+        
+        // --- PREVIEW FUNCTIONS for T2I ---
+        function showT2IPromptStep() {
+            document.getElementById('t2i-style-step-preview').classList.add('hidden');
+            document.getElementById('t2i-prompt-step-preview').classList.remove('hidden');
+        }
+
+        function resetT2IPreview() {
+            document.getElementById('t2i-prompt-step-preview').classList.add('hidden');
+            document.getElementById('t2i-style-step-preview').classList.remove('hidden');
+        }
+
+        // --- PREVIEW FUNCTIONS ---
+        function showT2IPreview() {
+            const resultsGrid = document.getElementById('results-grid');
+            document.getElementById('prompt-display').textContent = `Contoh hasil untuk prompt: "Modern isometric illustration of a productive home office..."`;
+            resultsGrid.innerHTML = `
+                <div class="result-image-container fade-in" onclick='showMetadataPreview(t2iData)'>
+                    <img src="${t2iData.imageUrl}" class="w-full h-full object-cover rounded-lg shadow-lg" alt="Contoh Hasil Utama">
+                    <div class="overlay p-4 flex items-center justify-center"><button class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Pilih & Buat Metadata</button></div>
+                </div>
+                <div class="locked-preview relative">
+                    <img src="https://raw.githubusercontent.com/wahyutifty/-asset-tentatif-studio/main/Gemini_Generated_Image_bkq3y1bkq3y1bkq3.png" class="w-full h-full object-cover rounded-lg shadow-lg">
+                </div>
+                <div class="locked-preview relative">
+                    <img src="https://raw.githubusercontent.com/wahyutifty/-asset-tentatif-studio/main/Gemini_Generated_Image_xpsmhhxpsmhhxpsm.png" class="w-full h-full object-cover rounded-lg shadow-lg">
+                </div>
+            `;
+            document.getElementById('results-title').innerText = 'Hasil Pratinjau';
+            showView('results-view');
+        }
+
+        function showI2IPreview() {
+            const resultsGrid = document.getElementById('results-grid');
+            document.getElementById('prompt-display').textContent = `Contoh hasil konversi gaya ke 'Ilustrasi Vektor'`;
+            resultsGrid.innerHTML = `
+                 <div class="fade-in">
+                    <h3 class="text-center font-semibold mb-2">Original</h3>
+                    <img src="https://raw.githubusercontent.com/wahyutifty/aset-ai-microstok/main/7da2125dff4b7e41ff0678648ab5e3d9.jpg" class="w-full h-auto object-contain rounded-lg shadow-lg" alt="Gambar Asli">
+                </div>
+                 <div class="result-image-container fade-in" onclick='showMetadataPreview(i2iData)'>
+                    <h3 class="text-center font-semibold mb-2">Hasil Konversi</h3>
+                    <img src="${i2iData.imageUrl}" class="w-full h-auto object-contain rounded-lg shadow-lg" alt="Hasil Konversi">
+                    <div class="overlay p-4 flex items-center justify-center"><button class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Pilih & Buat Metadata</button></div>
+                </div>
+            `;
+            resultsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+            document.getElementById('results-title').innerText = 'Hasil Konversi Gaya';
+            showView('results-view');
+        }
+
+        function showMetadataPreview(data) {
+            document.getElementById('metadata-image').src = data.imageUrl;
+            const contentDiv = document.getElementById('metadata-content');
+            
+            contentDiv.innerHTML = `
+                ${createMetadataSection('Judul', data.titles, 'judul')}
+                ${createMetadataSection('Deskripsi', data.description, 'deskripsi')}
+                ${createMetadataSection('Kata Kunci', data.keywords, 'kata-kunci')}
+                ${createMetadataSection('Saran Kategori', data.categories, 'saran-kategori')}
+            `;
+            showView('metadata-view');
+        }
+        
+        function createMetadataSection(title, content, id_suffix) {
+            const id = `metadata-${id_suffix}`;
+            return `
+                <div class="mb-5 fade-in">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-lg font-semibold text-blue-300">${title}</h4>
+                        <button onclick="showToast('Fitur salin tidak tersedia dalam pratinjau.')" class="text-sm bg-black/20 hover:bg-black/40 px-3 py-1 rounded-md transition">Salin</button>
+                    </div>
+                    <div id="${id}" class="bg-black/20 text-gray-300 p-3 rounded-md whitespace-pre-wrap">${content.replace(/, /g, ',\n')}</div>
+                </div>
+            `;
+        }
+
+        function showTrendsPreview() {
+            const trendsContent = document.getElementById('trends-content');
+            trendsContent.innerHTML = `
+                <div class="prose prose-invert max-w-none text-left">
+                    <h3 class="text-xl font-bold text-blue-300 mt-4 mb-2">Tren Fotografi Terkini</h3>
+                    <ul>
+                        <li><strong>Gaya Hidup Autentik:</strong> Foto candid yang menampilkan momen nyata, keberagaman, dan aktivitas sehari-hari.</li>
+                        <li><strong>Kesehatan Mental & Ketenangan:</strong> Visual yang menenangkan, alam, meditasi, dan konsep 'slow living'.</li>
+                        <li><strong>Warna Neon & Cyberpunk:</strong> Potret dengan pencahayaan neon, suasana kota malam, dan estetika futuristik.</li>
+                    </ul>
+                    <h3 class="text-xl font-bold text-blue-300 mt-4 mb-2">Tren Ilustrasi Terkini</h3>
+                    <ul>
+                        <li><strong>Karakter 3D Abstrak:</strong> Bentuk-bentuk geometris dan karakter lucu dengan tekstur seperti tanah liat (clay).</li>
+                        <li><strong>Ilustrasi Datar (Flat) dengan Tekstur:</strong> Gaya flat design yang diberi sentuhan tekstur kasar atau noise.</li>
+                    </ul>
+                </div>
+            `;
+            showView('trends-view');
+        }
+    </script>
+</body>
+</html>
+
+
+
